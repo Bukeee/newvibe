@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Find Reaction',
   section: 'Reaction Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/find_reaction_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.find}`;
@@ -16,16 +23,7 @@ module.exports = {
   html(isEvent, data) {
     return `
 <div>
-  <div style="float: left; width: 35%;">
-    Source Message:<br>
-    <select id="message" class="round" onchange="glob.messageChange(this, 'varNameContainer')">
-      ${data.messages[isEvent ? 1 : 0]}
-    </select>
-  </div>
-  <div id="varNameContainer" style="display: none; float: right; width: 60%;">
-    Variable Name:<br>
-    <input id="varName" class="round" type="text" list="variableList"><br>
-  </div>
+<message-input dropdownLabel="Source Message" selectId="message" variableContainerId="varNameContainer" variableInputId="varName"></message-input>
 </div><br><br><br><br>
 <div>
   <div style="float: left; width: 40%;">
@@ -59,11 +57,9 @@ module.exports = {
     glob.messageChange(document.getElementById('message'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
-    const message = parseInt(data.message, 10);
-    const varName = this.evalMessage(data.varName, cache);
-    const msg = this.getMessage(message, varName, cache);
+    const msg = await this.getMessageFromData(data.message, data.varName, cache);
     const info = parseInt(data.info, 10);
     const emoji = this.evalMessage(data.find, cache);
 

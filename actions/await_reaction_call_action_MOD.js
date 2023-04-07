@@ -4,6 +4,13 @@ module.exports = {
   name: 'Await Reaction Call Action',
   displayName: 'Await Reaction',
   section: 'Messaging',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/await_reaction_call_action_MOD.js',
+  },
 
   subtitle({ max, time }) {
     const getPlural = (n) => (n !== '1' ? 's' : '');
@@ -33,7 +40,7 @@ module.exports = {
 
   html(isEvent, data) {
     return `
-<div style="width: 550px; height: 350px; overflow-y: scroll; overflow-x: hidden;">
+<div style="height: 350px; overflow-y: scroll; overflow-x: hidden;">
   <div>
     <details>
       <summary><span style="color: white"><b>Filter Examples:</b></summary>
@@ -64,39 +71,40 @@ module.exports = {
         </span>
       </div><br>
     </details>
-  </div><br>
+  </div>
+  <br>
+  
   <div>
-    <div style="float: left; width: 35%;">
-      Source Message:<br>
-      <select id="storage" class="round" onchange="glob.messageChange(this, 'varNameContainer')">
-        ${data.messages[isEvent ? 1 : 0]}
-      </select>
-    </div>
-    <div id="varNameContainer" style="display: none; float: right; width: 60%;">
-      Variable Name:<br>
-      <input id="varName" class="round" type="text" list="variableList">
-    </div>
-  </div><br><br><br>
-  <div style="width: 567px; margin-top: 8px;">
+    <message-input dropdownLabel="Source Message" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></message-input>
+  </div>
+  <br><br><br>
+  
+  <div style="margin-top: 8px;">
     JavaScript Filter Eval: <span style="opacity: 0.5;">(JavaScript Strings)<br>
     <input id="filter" class="round" type="text" value="reaction.emoji.name === '👌' && author.id === user.id">
-  </div><br>
-  <div style="float: left; width: 50%;">
+  </div>
+  <br>
+  
+  <div style="float: left; width: 49%; margin-right: 8px;">
     Max Reactions:<br>
     <input id="max" class="round" type="text" value="1" placeholder="Optional"><br>
   </div>
   <div style="float: left; width: 49%;">
     Max Time (milliseconds):<br>
     <input id="time" class="round" type="text" value="60000" placeholder="Optional"><br>
-  </div><br><br><br>
-  <div style="float: left; width: 50%;">
+  </div>
+  <br><br><br>
+  
+  <div style="float: left; width: 49%; margin-right: 8px;">
     Max Emojis:<br>
     <input id="maxEmojis" class="round" type="text" placeholder="Optional"><br>
   </div>
   <div style="float: left; width: 49%;">
     Max Users:<br>
     <input id="maxUsers" class="round" type="text" placeholder="Optional"><br>
-  </div><br><br><br>
+  </div>
+  <br><br><br>
+  
   <div style="padding-top: 8px;">
     <div style="float: left; width: 35%;">
       On Respond:<br>
@@ -111,7 +119,9 @@ module.exports = {
     <div id="iftrueContainer" style="display: none; float: right; width: 60%;">
       <span id="iftrueName">Action Number</span>:<br><input id="iftrueVal" class="round" type="text">
     </div>
-  </div><br><br><br>
+  </div>
+  <br><br><br>
+  
   <div style="padding-top: 18px;">
     <div style="float: left; width: 35%;">
       On Timeout:<br>
@@ -125,7 +135,9 @@ module.exports = {
     </div>
     <div id="iffalseContainer" style="display: none; float: right; width: 60%;">
       <span id="iffalseName">Action Number</span>:<br><input id="iffalseVal" class="round" type="text"></div>
-    </div><br><br><br>
+    </div>
+    <br><br><br>
+
     <div style="padding-top: 10px;">
       <div style="float: left; width: 35%;">
         Store Reaction List To:<br>
@@ -137,9 +149,12 @@ module.exports = {
         Variable Name:<br>
         <input id="varName2" class="round" type="text">
       </div>
-    </div><br><br><br>
+    </div>
+    <br><br><br>
+
   </div>
 </div>
+
 <style>
   .codeblock {
     margin: 4px;
@@ -158,8 +173,6 @@ module.exports = {
 
   init() {
     const { glob, document } = this;
-
-    glob.messageChange(document.getElementById('storage'), 'varNameContainer');
 
     glob.variableChange(document.getElementById('storage2'), 'varNameContainer2');
     glob.onChangeTrue = function onChangeTrue(event) {
@@ -210,13 +223,10 @@ module.exports = {
     glob.onChangeFalse(document.getElementById('iffalse'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { Actions } = this.getDBM();
-
-    const messageVariable = parseInt(data.storage, 10);
-    const varName = this.evalMessage(data.varName, cache);
-    const msg = this.getMessage(messageVariable, varName, cache);
+    const msg = await this.getMessageFromData(data.storage, data.varName, cache);
 
     const storage = parseInt(data.storage2, 10);
     const varName2 = this.evalMessage(data.varName2, cache);
@@ -229,38 +239,32 @@ module.exports = {
       const maxUsers = parseInt(this.evalMessage(data.maxUsers, cache), 10);
       const time = parseInt(this.evalMessage(data.time, cache), 10);
 
+      const filter = (reaction, user) => {
+        const { interaction, msg: message, server } = cache;
+        const author = message?.author ?? interaction?.user;
+        const member = message?.member ?? interaction?.member;
+        const tempVars = Actions.getActionVariable.bind(cache.temp);
+        const globalVars = Actions.getActionVariable.bind(Actions.global);
+        const serverVars = server ? Actions.getActionVariable.bind(Actions.server[server.id]) : null;
+
+        try {
+          return Boolean(eval(js));
+        } catch {
+          return false;
+        }
+      };
+
       msg
-        .awaitReactions(
-          (reaction, user) => {
-            const { msg: message, server } = cache;
-            let member;
-            let author;
-            const tempVars = Actions.getActionVariable.bind(cache.temp);
-            const globalVars = Actions.getActionVariable.bind(Actions.global);
-            let serverVars = null;
-
-            if (message) {
-              member = message.member;
-              author = message.author;
-            }
-            if (server) serverVars = Actions.getActionVariable.bind(Actions.server[server.id]);
-
-            try {
-              return Boolean(eval(js));
-            } catch {
-              return false;
-            }
-          },
-          {
-            max,
-            maxEmojis,
-            maxUsers,
-            time,
-            errors: ['time'],
-          },
-        )
+        .awaitReactions({
+          filter,
+          max,
+          maxEmojis,
+          maxUsers,
+          time,
+          errors: ['time'],
+        })
         .then((c) => {
-          this.storeValue(c.size === 1 ? c.first() : c.array(), storage, varName2, cache);
+          this.storeValue(c.size === 1 ? c.first() : [...c.values()], storage, varName2, cache);
           this.executeResults(true, data, cache);
         })
         .catch(() => this.executeResults(false, data, cache));

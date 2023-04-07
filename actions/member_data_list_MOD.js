@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store Member Data List',
   section: 'Member Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/member_data_list_MOD.js',
+  },
 
   subtitle(data) {
     return `${[data.dataName]}`;
@@ -101,9 +108,9 @@ module.exports = {
     glob.onChange1(document.getElementById('numbefstselect'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
-    const { msg } = cache;
+    const { msg, interaction } = cache;
     const storage = parseInt(data.storage, 10);
     const varName2 = this.evalMessage(data.varName2, cache);
     const st = this.evalMessage(data.start, cache);
@@ -146,7 +153,7 @@ module.exports = {
             });
 
             try {
-              const user = msg.guild.members.cache.get(result[i]);
+              const user = (msg ?? interaction).guild.members.cache.get(result[i]);
               const { tag } = user.user;
 
               list.push({

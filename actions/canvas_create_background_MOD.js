@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Canvas Create Background',
   section: 'Image Editing',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/canvas_create_background_MOD.js',
+  },
 
   subtitle(data) {
     const info = parseInt(data.info, 10);
@@ -86,7 +93,7 @@ module.exports = {
     glob.onChange0(document.getElementById('info'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const Canvas = require('canvas');
     const width = parseInt(this.evalMessage(data.width, cache), 10);

@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Create GIF',
   section: 'Image Editing',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/create_gif_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.url}`;
@@ -35,7 +42,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const obj = this.evalMessage(data.url, cache);
 

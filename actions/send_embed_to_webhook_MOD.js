@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Send Embed to Webhook',
   section: 'Webhook Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/send_embed_to_webhook_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.varName2}`;
@@ -42,7 +49,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('storage2'), 'varNameContainer2');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
@@ -55,8 +62,10 @@ module.exports = {
 
     if (!embed2 || !webhook) return this.callNextAction(cache);
 
-    webhook.send(embed2);
-    this.callNextAction(cache);
+    webhook
+      .send({ embeds: [embed2] })
+      .then(() => this.callNextAction(cache))
+      .catch((err) => this.displayError(data, cache, err));
   },
 
   mod() {},

@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Convert To World Time',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/convert_to_world_time_MOD.js',
+  },
 
   subtitle() {
     return 'Input a timezone and retrieve its current time.';
@@ -37,7 +44,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const Mods = this.getMods();
     const moment = Mods.require('moment-timezone');

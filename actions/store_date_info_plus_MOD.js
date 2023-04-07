@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store Date Info Plus',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_date_info_plus_MOD.js',
+  },
 
   subtitle(data) {
     const info = [
@@ -140,7 +147,7 @@ module.exports = {
     }
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const moment = this.getMods().require('moment');
     const dateLanguage = this.evalMessage(data.dateLanguage, cache);

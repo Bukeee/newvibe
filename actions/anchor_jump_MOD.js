@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Jump to Anchor',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/anchor_jump_MOD.js',
+  },
 
   subtitle(data) {
     return data.description
@@ -40,7 +47,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const id = this.evalMessage(cache.actions[cache.index].jump_to_anchor, cache);
     this.anchorJump(id, cache);
   },

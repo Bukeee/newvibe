@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Run SQL Query',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/run_sql_query_MOD.js',
+  },
 
   variableStorage(data, varType) {
     if (parseInt(data.storage, 10) !== varType) return;
@@ -337,7 +344,7 @@ module.exports = {
     glob.variableChange(document.getElementById('store_source_conn_storage'), 'varNameContainer3');
   },
 
-  action(cache) {
+  async action(cache) {
     // fields: ["storage", "varName", "hostname", "port", "username", "password", "database", "query", "otype",
     // "source_conn_storage", "storage_conn_varName", "store_source_conn_storage", "store_storage_conn_varName", "debugMode"],
 
@@ -407,7 +414,7 @@ module.exports = {
         },
       };
 
-      if (!DEBUG) {
+      if (DEBUG === 0) {
         options.logging = false;
       }
 

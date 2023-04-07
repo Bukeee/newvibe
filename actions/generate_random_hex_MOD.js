@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Generate Random Hex Color',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/generate_random_hex_MOD.js',
+  },
 
   subtitle() {
     return 'Generates random hex color code';
@@ -35,7 +42,7 @@ module.exports = {
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const type = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);

@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Parse From Stored Json',
   section: 'JSON Things',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/parse_from_stored_json_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.varName}`;
@@ -12,10 +19,17 @@ module.exports = {
     return [data.varName, `JSON ${varType} Value`];
   },
 
-  fields: ['behavior', 'varStorage', 'jsonObjectVarName', 'path', 'storage', 'varName'],
+  fields: ['behavior', 'varStorage', 'jsonObjectVarName', 'path', 'storage', 'varName', 'debugMode'],
 
   html(_isEvent, data) {
     return `
+<style>
+    .debugMode {
+      float: left;
+      margin-left: 10px;
+      width: 30%;
+    }
+</style>
 <div style="margin: 0; overflow-y: none;">
     <div style="width: 80%;">
         <div style="float: left; width: 35%;">
@@ -28,13 +42,13 @@ module.exports = {
             Variable Name:<br>
             <input id="jsonObjectVarName" class="round" type="text" list="variableList">
         </div><br><br><br>
-        <div id="pathContainer" style="padding-top: 8px;">
+        <div id="pathContainer" style="padding-top: 8px">
             JSON Path: (supports the usage of <a href="http://goessner.net/articles/JsonPath/index.html#e2" target="_blank">JSON Path (Regex)</a>)<br>
-            <input id="path" class="round" ;" type="text"><br>
+            <input id="path" class="round" type="text"><br>
         </div>
     </div>
-    <div style="width: 80%;">
-        <div style="float: left; width: 30%;">
+    <div style="width: 80%">
+        <div style="float: left; width: 30%">
             <label for="storage">
                 <font color="white">Store In:</font>
             </label>
@@ -55,12 +69,12 @@ module.exports = {
             <label for="behavior">
                 <font color="white">End Behavior:</font>
             </label>
-            <select id="behavior" class="round" ;>
+            <select id="behavior" class="round">
                 <option value="0" selected>Call Next Action Automatically</option>
                 <option value="1">Do Not Call Next Action</option>
             </select>
         </div>
-        <div style="float: left; margin-left: 10px; width: 30%;">
+        <div class="debugMode">
             <br>
             <label for="debugMode">
                 <font color="white">Debug Mode:</font>
@@ -81,7 +95,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('storage'));
   },
 
-  action(cache) {
+  async action(cache) {
     const Mods = this.getMods();
     const data = cache.actions[cache.index];
     const varName = this.evalMessage(data.varName, cache);
@@ -101,12 +115,10 @@ module.exports = {
       if (path && jsonData) {
         let outData = Mods.jsonPath(jsonData, path);
 
-        // if it doesn't work, try to go back one path
         if (outData === false) {
           outData = Mods.jsonPath(jsonData, `$.${path}`);
         }
 
-        // if it still doesn't work, try to go back two paths
         if (outData === false) {
           outData = Mods.jsonPath(jsonData, `$..${path}`);
         }
@@ -121,29 +133,27 @@ module.exports = {
           console.error(error.stack ? error.stack : error);
         }
 
-        const outValue = eval(JSON.stringify(outData), cache);
+        const outValue = JSON.stringify(outData);
 
-        if (outData.success !== null || outValue.success !== null) {
+        if (outData.success === null || outValue.success === null) {
           const errorJson = JSON.stringify({
             error: 'error',
             statusCode: 0,
             success: false,
           });
           this.storeValue(errorJson, storage, varName, cache);
-          console.log(`WebAPI Parser: Error Invalid JSON, is the Path set correctly? [${path}]`);
-        } else if (outValue.success !== null || !outValue) {
+          console.log(`1: WebAPI Parser: Error Invalid JSON, is the Path set correctly? [${path}]`);
+        } else if (!outValue || outValue.success === null) {
           const errorJson = JSON.stringify({
             error: 'error',
             statusCode: 0,
             success: false,
           });
           this.storeValue(errorJson, storage, varName, cache);
-          console.log(`WebAPI Parser: Error Invalid JSON, is the Path set correctly? [${path}]`);
+          console.log(`2: WebAPI Parser: Error Invalid JSON, is the Path set correctly? [${path}]`);
         } else {
           this.storeValue(outValue, storage, varName, cache);
-          if (DEBUG) {
-            console.log(`WebAPI Parser: JSON Data values starting from [${path}] stored to: [${varName}]`);
-          }
+          if (DEBUG) console.log(`WebAPI Parser: JSON Data values starting from [${path}] stored to: [${varName}]`);
         }
       }
     } catch (error) {

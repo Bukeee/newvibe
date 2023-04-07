@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Canvas Image Filter',
   section: 'Image Editing',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/canvas_image_filter_MOD.js',
+  },
 
   subtitle(data) {
     const storeTypes = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -76,7 +83,7 @@ module.exports = {
     glob.onChange1(document.getElementById('info'));
   },
 
-  action(cache) {
+  async action(cache) {
     const Canvas = require('canvas');
     const Filter = require('imagedata-filters');
     const data = cache.actions[cache.index];

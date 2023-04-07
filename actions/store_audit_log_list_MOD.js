@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store Audit Log List MOD',
   section: 'Server Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_audit_log_list_MOD.js',
+  },
 
   subtitle(data) {
     const storage = ['All Member', 'Mentioned User', 'Command Author', 'tempVars', 'serverVars', 'globalVars'];
@@ -75,7 +82,9 @@ module.exports = {
     Variable Name:<br>
     <input id="varName" class="round" type="text"><br>
   </div>
-</div><br><br><br>
+</div>
+<br><br><br>
+
 <div>
   <div style="float: left; width: 94%;">
     Action Type:<br>
@@ -118,19 +127,25 @@ module.exports = {
       <option value="78">Delete Integration</option>
     </select><br>
   </div>
-</div><br><br><br>
+</div>
+<br><br><br>
+
 <div>
   <div style="float: left; width: 48%;">
     Before Entry / Timestamp:<br>
     <input id="before" class="round" type="text" placeholder="Leave it blank for None."><br>
   </div>
-</div><br><br><br>
+</div>
+<br><br><br>
+
 <div>
   <div style="float: left; width: 104%;">
     Amount to Fetch:<br>
     <input id="limit" class="round" type="text" placeholder="Leave it blank for All."><br>
   </div>
-</div><br><br><br>
+</div>
+<br><br><br>
+
 <div>
   <div style="float: left; width: 35%;">
     Store In:<br>
@@ -165,7 +180,7 @@ module.exports = {
     glob.onChange0(document.getElementById('storage'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { server } = cache;
     const member = parseInt(data.storage, 10);
@@ -178,7 +193,7 @@ module.exports = {
         break;
       default: {
         const varName = this.evalMessage(data.varName, cache);
-        mem = this.getMember(member - 1, varName, cache);
+        mem = await this.getMember(member - 1, varName, cache);
         break;
       }
     }

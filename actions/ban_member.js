@@ -1,92 +1,125 @@
 module.exports = {
-  name: 'Ban Member',
-  section: 'Member Control',
+  //---------------------------------------------------------------------
+  // Action Name
+  //
+  // This is the name of the action displayed in the editor.
+  //---------------------------------------------------------------------
 
-  subtitle(data) {
-    const users = ['Mentioned User', 'Command Author', 'Temp Variable', 'Server Variable', 'Global Variable', 'By ID'];
-    const guilds = ['Current Server', 'Temp Variable', 'Server Variable', 'Global Variable'];
-    return `${users[parseInt(data.member, 10)]} - ${guilds[parseInt(data.guild, 10)]}`;
+  name: "Ban Member",
+
+  //---------------------------------------------------------------------
+  // Action Section
+  //
+  // This is the section the action will fall into.
+  //---------------------------------------------------------------------
+
+  section: "Member Control",
+
+  //---------------------------------------------------------------------
+  // Action Subtitle
+  //
+  // This function generates the subtitle displayed next to the name.
+  //---------------------------------------------------------------------
+
+  subtitle(data, presets) {
+    return `${presets.getMemberText(data.member, data.varName)}`;
   },
 
-  fields: ['member', 'varName', 'reason', 'guild', 'varName2', 'days'],
+  //---------------------------------------------------------------------
+  // Action Meta Data
+  //
+  // Helps check for updates and provides info if a custom mod.
+  // If this is a third-party mod, please set "author" and "authorUrl".
+  //
+  // It's highly recommended "preciseCheck" is set to false for third-party mods.
+  // This will make it so the patch version (0.0.X) is not checked.
+  //---------------------------------------------------------------------
+
+  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+
+  //---------------------------------------------------------------------
+  // Action Fields
+  //
+  // These are the fields for the action. These fields are customized
+  // by creating elements with corresponding IDs in the HTML. These
+  // are also the names of the fields stored in the action's JSON data.
+  //---------------------------------------------------------------------
+
+  fields: ["member", "varName", "reason", "days"],
+
+  //---------------------------------------------------------------------
+  // Command HTML
+  //
+  // This function returns a string containing the HTML used for
+  // editing actions.
+  //
+  // The "isEvent" parameter will be true if this action is being used
+  // for an event. Due to their nature, events lack certain information,
+  // so edit the HTML to reflect this.
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
-This action has been modified by DBM Mods.<br>
-<div>
-  <div style="float: left; width: 35%;">
-    Member:<br>
-    <select id="member" class="round" onchange="glob.user(this, 'varNameContainer')">
-      ${data.members[isEvent ? 1 : 0]}
-      <option value="5">By ID</option>
-    </select>
-  </div>
-  <div id="varNameContainer" style="display: none; float: right; width: 60%;">
-    Variable Name:<br>
-    <input id="varName" class="round" type="text" list="variableList"><br>
-  </div><br><br><br>
-  <div style="float: left; width: 35%;">
-    Server:<br>
-    <select id="guild" class="round" onchange="glob.serverChange(this, 'varNameContainer2')">
-      ${data.servers[isEvent ? 1 : 0]}
-    </select>
-  </div>
-  <div id="varNameContainer2" style="display: none; float: right; width: 60%;">
-    Variable Name:<br>
-    <input id="varName2" class="round" type="text" list="variableList"><br>
-  </div>
-</div>
+<member-input dropdownLabel="Member" selectId="member" variableContainerId="varNameContainer" variableInputId="varName"></member-input>
+
 <br><br><br>
+
 <div style="padding-top: 8px;">
-  Reason:<br>
-  <textarea id="reason" rows="5" placeholder="Insert reason here..." style="width: 99%; font-family: monospace; white-space: nowrap; resize: none;"></textarea><br>
-</div>
-<div style="padding-top: 8px;">
-  Days of Messages to Delete:<br>
-  <textarea id="days" rows="1" style="width: 99%; font-family: monospace; white-space: nowrap; resize: none;"></textarea>
+	<span class="dbminputlabel">Reason</span><br>
+	<textarea id="reason" class="dbm_monospace" rows="5" placeholder="Insert reason here..." style="white-space: nowrap; resize: none;"></textarea>
+</div><br>
+
+<div>
+  <span class="dbminputlabel">Number of days of messages to delete</span>
+  <input id="days" placeholder="Optional" class="round" type="text">
 </div>`;
   },
 
-  init() {
-    const { glob, document } = this;
+  //---------------------------------------------------------------------
+  // Action Editor Init Code
+  //
+  // When the HTML is first applied to the action editor, this code
+  // is also run. This helps add modifications or setup reactionary
+  // functions for the DOM elements.
+  //---------------------------------------------------------------------
 
-    glob.user = function user(element, container) {
-      if (element.value === '5') {
-        document.getElementById(container).childNodes[0].nodeValue = 'User ID:';
-      } else {
-        document.getElementById(container).childNodes[0].nodeValue = 'Variable Name:';
-      }
-      glob.memberChange(element, container);
-    };
+  init() {},
 
-    glob.user(document.getElementById('member'), 'varNameContainer');
-    glob.serverChange(document.getElementById('guild'), 'varNameContainer2');
-  },
+  //---------------------------------------------------------------------
+  // Action Bot Function
+  //
+  // This is the function for the action within the Bot's Action class.
+  // Keep in mind event calls won't have access to the "msg" parameter,
+  // so be sure to provide checks for variable existence.
+  //---------------------------------------------------------------------
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
-    const type = parseInt(data.member, 10);
-    const varName = this.evalMessage(data.varName, cache);
-    const varName2 = this.evalMessage(data.varName2, cache);
-    const guildType = parseInt(data.guild, 10);
-    const server = this.getServer(guildType, varName2, cache);
-    const reason = this.evalMessage(data.reason, cache) || '';
-    const days = parseInt(this.evalMessage(data.days, cache), 10);
-    const member = type === 5 ? this.evalMessage(varName) : this.getMember(type, varName, cache);
-    if (guildType !== 0) {
-      cache.server = server;
-    }
+    const member = await this.getMemberFromData(data.member, data.varName, cache);
+    const reason = this.evalMessage(data.reason, cache);
+    const days = parseInt(data.days, 10) || 0;
     if (Array.isArray(member)) {
-      this.callListFunc(member, 'ban', [{ days, reason }]).then(() => this.callNextAction(cache));
-    } else if (member) {
-      server.members
-        .ban(member, { days, reason })
+      this.callListFunc(member, "ban", [{ days, reason }])
         .then(() => this.callNextAction(cache))
-        .catch(this.displayError.bind(this, data, cache));
+        .catch((err) => this.displayError(data, cache, err));
+    } else if (member?.ban) {
+      member
+        .ban({ days, reason })
+        .then(() => this.callNextAction(cache))
+        .catch((err) => this.displayError(data, cache, err));
     } else {
       this.callNextAction(cache);
     }
   },
+
+  //---------------------------------------------------------------------
+  // Action Bot Mod
+  //
+  // Upon initialization of the bot, this code is run. Using the bot's
+  // DBM namespace, one can add/modify existing functions if necessary.
+  // In order to reduce conflicts between mods, be sure to alias
+  // functions you wish to overwrite.
+  //---------------------------------------------------------------------
 
   mod() {},
 };

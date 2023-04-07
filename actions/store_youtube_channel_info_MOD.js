@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store YouTube Channel Info',
   section: 'YouTube Tools',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_youtube_channel_info_MOD.js',
+  },
 
   subtitle() {
     return 'Store information about a YouTube channel.';
@@ -62,7 +69,7 @@ module.exports = {
     const ytch = Mods.require('yt-channel-info');
     let result;
 
-    const channel = await ytch.getChannelInfo(channelId);
+    const channel = await ytch.getChannelInfo({ channelId });
 
     switch (info) {
       case 0:

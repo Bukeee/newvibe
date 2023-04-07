@@ -3,6 +3,13 @@ module.exports = {
   displayName: 'Get Command Description',
   section: 'Other Stuff',
   fields: ['findBy', 'commandData', 'saveTo', 'varName'],
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/get_command_description_MOD.js',
+  },
 
   subtitle() {
     return 'Get Command Description';
@@ -39,7 +46,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { findBy, saveTo } = data;
 

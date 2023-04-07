@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Delete Invite',
   section: 'Invite Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/delete_invite',
+  },
 
   subtitle(data) {
     return `${data.invite}`;
@@ -29,7 +36,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const invite = this.evalMessage(data.invite, cache);
     const reason = this.evalMessage(data.reason, cache);

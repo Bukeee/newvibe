@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Color',
   section: 'Tools',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/color_tool_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.color}`;
@@ -33,7 +40,7 @@ Color:<br>
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const color = this.evalMessage(data.color, cache);
 

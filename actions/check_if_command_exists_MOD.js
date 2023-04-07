@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Check If Command Exists',
   section: 'Conditions',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/check_if_command_exists_MOD.js',
+  },
 
   subtitle(data) {
     const results = [
@@ -89,7 +96,7 @@ module.exports = {
     glob.onChangeFalse(document.getElementById('iffalse'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const fs = require('fs');
     const jp = this.getMods().require('jsonpath');

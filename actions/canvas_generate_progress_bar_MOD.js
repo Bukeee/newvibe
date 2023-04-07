@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Canvas Generate Progress Bar',
   section: 'Image Editing',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/canvas_generate_progress_bar_MOD.js',
+  },
 
   subtitle(data) {
     const storeTypes = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -91,7 +98,7 @@ module.exports = {
     glob.onChange1(document.getElementById('type'));
   },
 
-  action(cache) {
+  async action(cache) {
     const Canvas = require('canvas');
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);

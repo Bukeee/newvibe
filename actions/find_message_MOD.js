@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Find Message',
   section: 'Messaging',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/find_message_MOD.js',
+  },
 
   subtitle(data) {
     const channels = [
@@ -24,23 +31,14 @@ module.exports = {
 
   html(isEvent, data) {
     return `
-<div id ="wrexdiv" style="width: 550px; height: 350px; overflow-y: scroll;">
-<div>
-  <div style="float: left; width: 35%;">
-    Source Channel:<br>
-    <select id="channel" class="round" onchange="glob.channelChange(this, 'varNameContainer')">
-      ${data.channels[isEvent ? 1 : 0]}
-    </select>
-  </div>
-  <div id="varNameContainer" style="display: none; float: right; width: 60%;">
-    Variable Name:<br>
-    <input id="varName" class="round" type="text" list="variableList"><br>
-  </div>
-</div><br><br><br>
-<div>
-  <div style="float: left; width: 70%;">
-    Find by:<br>
-    <select id="info" class="round">
+<div style="padding-top: 8px;">
+  <channel-input dropdownLabel="Source Channel" selectId="channel" variableContainerId="varNameContainer" variableInputId="varName"></channel-input>
+  <br><br><br>
+
+  <div>
+    <div style="float: left; width: 70%;">
+      Find by:<br>
+      <select id="info" class="round">
       <option value="0" selected>Find by Content</option>
       <option value="1">Find by ID</option>
     </select>
@@ -49,7 +47,9 @@ module.exports = {
     Search for:<br>
     <input id="search" class="round" type="text"><br>
   </div>
-</div><br>
+</div>
+<br>
+
 <div>
   <div style="float: left; width: 35%;">
     Store In:<br>
@@ -61,7 +61,9 @@ module.exports = {
     Variable Name:<br>
     <input id="varName2" class="round" type="text"><br>
   </div>
-</div><br><br><br>
+</div>
+<br><br><br>
+
 <div>
   <p>
   <u>Note:</u><br>
@@ -75,13 +77,11 @@ module.exports = {
     glob.channelChange(document.getElementById('channel'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
-    const channel = parseInt(data.channel, 10);
-    const varName = this.evalMessage(data.varName, cache);
     const info = parseInt(data.info, 10);
     const search = this.evalMessage(data.search, cache);
-    const targetChannel = this.getChannel(channel, varName, cache);
+    const targetChannel = await this.getChannelFromData(data.channel, data.varName, cache);
     const storage = parseInt(data.storage, 10);
     const varName2 = this.evalMessage(data.varName2, cache);
 

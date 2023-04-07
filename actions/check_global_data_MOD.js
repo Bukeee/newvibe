@@ -1,16 +1,17 @@
 module.exports = {
   name: 'Check Global Data',
   section: 'Data',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/check_global_data_MOD.js',
+  },
 
   subtitle(data) {
-    const results = [
-      'Continue Actions',
-      'Stop Action Sequence',
-      'Jump To Action',
-      'Jump Forward Actions',
-      'Jump to Anchor',
-    ];
-    return `If True: ${results[parseInt(data.iftrue, 10)]} ~ If False: ${results[parseInt(data.iffalse, 10)]}`;
+    const comparison = ['Exists', 'Equals', 'Equals Exactly', 'Less Than', 'Greater Than', 'Includes', 'Matches Regex'];
+    return `${data.dataName} ${comparison[parseInt(data.comparison, 10)]} ${data.value}`;
   },
 
   fields: ['dataName', 'comparison', 'value', 'iftrue', 'iftrueVal', 'iffalse', 'iffalseVal', 'Jump to Anchor'],
@@ -106,7 +107,7 @@ module.exports = {
     glob.onChangeFalse(document.getElementById('iffalse'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const dataName = this.evalMessage(data.dataName, cache);
     const compare = parseInt(data.comparison, 10);

@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store Emoji Info',
   section: 'Emoji Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_emoji_info_MOD.js',
+  },
 
   subtitle(data) {
     const emoji = ['You cheater!', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -131,7 +138,7 @@ module.exports = {
     glob.emojiChange(document.getElementById('emoji'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const emoji = parseInt(data.emoji, 10);
     const varName = this.evalMessage(data.varName, cache);

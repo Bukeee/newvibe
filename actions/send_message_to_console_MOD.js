@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Send Message to Console',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/send_message_to_console_MOD.js',
+  },
 
   subtitle(data) {
     if (data.tosend.length > 0) {
@@ -25,9 +32,8 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
-    const Mods = this.getMods();
-    const chalk = Mods.require('chalk');
+  async action(cache) {
+    const { default: chalk } = await import('chalk');
     const data = cache.actions[cache.index];
     const send = this.evalMessage(data.tosend, cache);
 

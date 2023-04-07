@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Send Message to Twitch Chat',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/send_message_to_twitch_chat_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.username} - Send Message to Twitch Channel: ${data.channelToSendTo}`;
@@ -33,7 +40,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const messageToSend = this.evalMessage(data.messageToSend, cache);
     const channelToSendTo = this.evalMessage(data.channelToSendTo, cache);

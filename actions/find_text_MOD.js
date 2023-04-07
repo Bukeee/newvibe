@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Find Text',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/find_text_MOD.js',
+  },
 
   subtitle(data) {
     return `Find "${data.wordtoFind}"`;
@@ -54,7 +61,7 @@ module.exports = {
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const text = this.evalMessage(data.text, cache);
     const wordToFind = this.evalMessage(data.wordtoFind, cache);

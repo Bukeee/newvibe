@@ -1,141 +1,188 @@
 module.exports = {
-  name: 'Store Role Info',
-  section: 'Role Control',
+  //---------------------------------------------------------------------
+  // Action Name
+  //
+  // This is the name of the action displayed in the editor.
+  //---------------------------------------------------------------------
 
-  subtitle(data) {
-    const roles = [
-      'Mentioned Role',
-      '1st Author Role',
-      '1st Server Role',
-      'Temp Variable',
-      'Server Variable',
-      'Global Variable',
-    ];
+  name: "Store Role Info",
+
+  //---------------------------------------------------------------------
+  // Action Section
+  //
+  // This is the section the action will fall into.
+  //---------------------------------------------------------------------
+
+  section: "Role Control",
+
+  //---------------------------------------------------------------------
+  // Action Subtitle
+  //
+  // This function generates the subtitle displayed next to the name.
+  //---------------------------------------------------------------------
+
+  subtitle(data, presets) {
     const info = [
-      'Role Object',
-      'Role ID',
-      'Role Name',
-      'Role Color',
-      'Role Position',
-      'Role Timestamp',
-      'Role Is Mentionable?',
-      'Role Is Separate From Others?',
-      'Role Is Managed?',
-      'Role Member List',
-      'Role Creation Date',
-      'Role Permissions',
-      'Role Members Amount',
-      'Role Permissions List',
+      "Role Object",
+      "Role ID",
+      "Role Name",
+      "Role Color",
+      "Role Position",
+      "Role Timestamp",
+      "Role Is Mentionable?",
+      "Role Is Separate From Others?",
+      "Role Is Managed?",
+      "Role Members List",
+      "Role Creation Date",
+      "Role Permissions",
+      "Role Members Amount",
+      "Role Icon",
     ];
-    return `${roles[parseInt(data.role, 10)]} - ${info[parseInt(data.info, 10)]}`;
+    return `${presets.getRoleText(data.role, data.varName)} - ${info[parseInt(data.info, 10)]}`;
   },
 
+  //---------------------------------------------------------------------
+  // Action Storage Function
+  //
+  // Stores the relevant variable info for the editor.
+  //---------------------------------------------------------------------
+
   variableStorage(data, varType) {
-    if (parseInt(data.storage, 10) !== varType) return;
-    let dataType = 'Unknown Type';
-    switch (parseInt(data.info, 10)) {
+    const type = parseInt(data.storage, 10);
+    if (type !== varType) return;
+    const info = parseInt(data.info, 10);
+    let dataType = "Unknown Type";
+    switch (info) {
       case 0:
-        dataType = 'Role';
+        dataType = "Role";
         break;
       case 1:
-        dataType = 'Role ID';
+        dataType = "Role ID";
         break;
       case 2:
-        dataType = 'Text';
+        dataType = "Text";
         break;
       case 3:
-        dataType = 'Color';
+        dataType = "Color";
         break;
       case 4:
       case 5:
-        dataType = 'Text';
+        dataType = "Text";
         break;
       case 6:
       case 7:
+        dataType = "Boolean";
+        break;
       case 8:
-        dataType = 'Boolean';
+        dataType = "Boolean";
         break;
       case 9:
-        dataType = 'Member List';
+        dataType = "Member List";
         break;
       case 10:
-        dataType = 'Date';
+        dataType = "Date";
         break;
       case 11:
       case 12:
-        dataType = 'Number';
+        dataType = "Number";
         break;
-      default:
+      case 13:
+        dataType = "Image URL";
         break;
     }
     return [data.varName2, dataType];
   },
 
-  fields: ['role', 'varName', 'info', 'storage', 'varName2'],
+  //---------------------------------------------------------------------
+  // Action Meta Data
+  //
+  // Helps check for updates and provides info if a custom mod.
+  // If this is a third-party mod, please set "author" and "authorUrl".
+  //
+  // It's highly recommended "preciseCheck" is set to false for third-party mods.
+  // This will make it so the patch version (0.0.X) is not checked.
+  //---------------------------------------------------------------------
+
+  meta: { version: "2.1.7", preciseCheck: true, author: null, authorUrl: null, downloadUrl: null },
+
+  //---------------------------------------------------------------------
+  // Action Fields
+  //
+  // These are the fields for the action. These fields are customized
+  // by creating elements with corresponding IDs in the HTML. These
+  // are also the names of the fields stored in the action's JSON data.
+  //---------------------------------------------------------------------
+
+  fields: ["role", "varName", "info", "storage", "varName2"],
+
+  //---------------------------------------------------------------------
+  // Command HTML
+  //
+  // This function returns a string containing the HTML used for
+  // editing actions.
+  //
+  // The "isEvent" parameter will be true if this action is being used
+  // for an event. Due to their nature, events lack certain information,
+  // so edit the HTML to reflect this.
+  //---------------------------------------------------------------------
 
   html(isEvent, data) {
     return `
-<div><p>This action has been modified by DBM Mods.</p></div><br>
-<div>
-  <div style="float: left; width: 35%;">
-    Source Role:<br>
-    <select id="role" class="round" onchange="glob.roleChange(this, 'varNameContainer')">
-      ${data.roles[isEvent ? 1 : 0]}
-    </select>
-  </div>
-  <div id="varNameContainer" style="display: none; float: right; width: 60%;">
-    Variable Name:<br>
-    <input id="varName" class="round" type="text" list="variableList"><br>
-  </div>
-</div><br><br><br>
-<div>
-  <div style="padding-top: 8px; width: 70%;">
-    Source Info:<br>
-    <select id="info" class="round">
-      <option value="0" selected>Role Object</option>
-      <option value="1">Role ID</option>
-      <option value="2">Role Name</option>
-      <option value="3">Role Color</option>
-      <option value="4">Role Position</option>
-      <option value="10">Role Creation Date</option>
-      <option value="5">Role Timestamp</option>
-      <option value="11">Role Permissions</option>
-      <option value="9">Role Members</option>
-      <option value="12">Role Members Amount</option>
-      <option value="6">Role Is Mentionable?</option>
-      <option value="7">Role Is Separate From Others?</option>
-      <option value="8">Role Is Managed By Bot/Integration</option>
-      <option value="13">Role Permissions List</option>
-    </select>
-  </div>
-</div><br>
-<div>
-  <div style="float: left; width: 35%;">
-    Store In:<br>
-    <select id="storage" class="round">
-      ${data.variables[1]}
-    </select>
-  </div>
-  <div id="varNameContainer2" style="float: right; width: 60%;">
-    Variable Name:<br>
-    <input id="varName2" class="round" type="text"><br>
-  </div>
-</div>`;
+<role-input dropdownLabel="Source Role" selectId="role" variableContainerId="varNameContainer" variableInputId="varName"></role-input>
+
+<br><br><br>
+
+<div style="padding-top: 8px;">
+	<span class="dbminputlabel">Source Info</span><br>
+	<select id="info" class="round">
+		<option value="0" selected>Role Object</option>
+		<option value="1">Role ID</option>
+		<option value="2">Role Name</option>
+		<option value="3">Role Color</option>
+		<option value="4">Role Position</option>
+		<option value="5">Role Timestamp</option>
+		<option value="6">Role Is Mentionable?</option>
+    <option value="7">Role Is Separate From Others?</option>
+    <option value="8">Role Is Managed By Bot/Integration</option>
+    <option value="9">Role Members</option>
+    <option value="10">Role Creation Date</option>
+    <option value="11">Role Permissions</option>
+    <option value="12">Role Members Amount</option>
+    <option value="13">Role Icon URL</option>
+	</select>
+</div>
+
+<br>
+
+<store-in-variable dropdownLabel="Store In" selectId="storage" variableContainerId="varNameContainer2" variableInputId="varName2"></store-in-variable>`;
   },
 
-  init() {
-    const { glob, document } = this;
-    glob.roleChange(document.getElementById('role'), 'varNameContainer');
-  },
+  //---------------------------------------------------------------------
+  // Action Editor Init Code
+  //
+  // When the HTML is first applied to the action editor, this code
+  // is also run. This helps add modifications or setup reactionary
+  // functions for the DOM elements.
+  //---------------------------------------------------------------------
 
-  action(cache) {
+  init() {},
+
+  //---------------------------------------------------------------------
+  // Action Bot Function
+  //
+  // This is the function for the action within the Bot's Action class.
+  // Keep in mind event calls won't have access to the "msg" parameter,
+  // so be sure to provide checks for variable existence.
+  //---------------------------------------------------------------------
+
+  async action(cache) {
     const data = cache.actions[cache.index];
-    const role = parseInt(data.role, 10);
-    const varName = this.evalMessage(data.varName, cache);
+    const targetRole = await this.getRoleFromData(data.role, data.varName, cache);
     const info = parseInt(data.info, 10);
-    const targetRole = this.getRole(role, varName, cache);
-    if (!targetRole) return this.callNextAction(cache);
-
+    if (!targetRole) {
+      this.callNextAction(cache);
+      return;
+    }
     let result;
     switch (info) {
       case 0:
@@ -166,7 +213,7 @@ module.exports = {
         result = targetRole.managed;
         break;
       case 9:
-        result = targetRole.members.array();
+        result = [...targetRole.members.values()];
         break;
       case 10:
         result = targetRole.createdAt;
@@ -178,7 +225,7 @@ module.exports = {
         result = targetRole.members.size;
         break;
       case 13:
-        result = targetRole.permissions.toArray().join(', ').replace(/_/g, ' ').toLowerCase();
+        result = targetRole.iconURL({ dynamic: true, format: "png", size: 4096 });
         break;
       default:
         break;
@@ -190,6 +237,15 @@ module.exports = {
     }
     this.callNextAction(cache);
   },
+
+  //---------------------------------------------------------------------
+  // Action Bot Mod
+  //
+  // Upon initialization of the bot, this code is run. Using the bot's
+  // DBM namespace, one can add/modify existing functions if necessary.
+  // In order to reduce conflicts between mods, be sure to alias
+  // functions you wish to overwrite.
+  //---------------------------------------------------------------------
 
   mod() {},
 };

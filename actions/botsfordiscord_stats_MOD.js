@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Send Stats to BFD',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/botsfordiscord_stats_MOD.js',
+  },
 
   subtitle() {
     return 'Send server count to BFD!';
@@ -28,7 +35,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const token = this.evalMessage(data.BFDToken, cache);
     const clientid = this.evalMessage(data.ClientID, cache);

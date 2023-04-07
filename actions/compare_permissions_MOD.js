@@ -2,6 +2,13 @@ module.exports = {
   name: 'Compare Permissions',
 
   section: 'Permission Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/compare_permissions_MOD.js',
+  },
 
   subtitle(data) {
     const variables = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -61,7 +68,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('storage2'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { Permissions } = this.getDBM().DiscordJS;
     const varName = this.evalMessage(data.varName, cache);

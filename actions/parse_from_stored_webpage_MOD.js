@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Parse From Stored Webpage',
   section: 'HTML/XML Things',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/parse_from_stored_webpage_MOD.js',
+  },
 
   subtitle(data) {
     return ` Var: ${data.varName} Path: ${data.xpath}`;
@@ -98,7 +105,7 @@ module.exports = {
     glob.variableChange(document.getElementById('source'), 'sourceVarNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     function manageXmlParseError(msg, errorLevel, errorLog) {
       if (errorLog.errorLevel === null || errorLog.errorLevel < errorLevel) {
         errorLog.errorLevel = errorLevel;

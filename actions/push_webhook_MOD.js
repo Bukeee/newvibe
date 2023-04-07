@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Send Message To Webhook',
   section: 'Webhook Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/push_webhook_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.message}`;
@@ -34,7 +41,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('webhook'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const webhook = parseInt(data.webhook, 10);
     const varName = this.evalMessage(data.varName, cache);

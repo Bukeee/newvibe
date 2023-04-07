@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Command Description',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/description_MOD.js',
+  },
 
   subtitle() {
     return 'Command Description';
@@ -27,7 +34,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     this.callNextAction(cache);
   },
 

@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Create Animated Emoji',
   section: 'Emoji Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/create_animated_emoji_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.emojiName}`;
@@ -62,11 +69,11 @@ module.exports = {
     glob.onChange1(document.getElementById('storage2'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { server } = cache;
 
-    if (!server?.emojis?.create) return this.callnextAction(cache);
+    if (!server?.emojis?.create) return this.callNextAction(cache);
 
     const type = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);

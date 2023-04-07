@@ -2,6 +2,13 @@ module.exports = {
   name: 'Store Audit Log Info MOD',
   displayName: 'Store Audit Log Info',
   section: 'Server Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_audit_log_info_MOD.js',
+  },
 
   subtitle(data) {
     const storage = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -133,7 +140,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('storage'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { server } = cache;
     const storage = parseInt(data.storage, 10);

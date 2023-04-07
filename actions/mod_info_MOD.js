@@ -1,11 +1,16 @@
 module.exports = {
   name: 'Welcome',
-  section: '#Mod Information',
+  section: '#DBM Mods',
   version: '1.9.8',
-
-  subtitle() {
-    return 'Put this into a Bot Initialization event for music!';
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/mod_info_MOD.js',
   },
+
+  subtitle() {},
 
   fields: ['mods'],
 
@@ -180,7 +185,7 @@ span.discord_code_blocks {
     Visit us on GitHub! The whole mod collection is on GitHub
     and everyone is invited to join us developing new mods!<br>
     Copy and paste the link to view the site in your browser.<br>
-    <span class="wrexlink3" data-url3="https://github.com/Discord-Bot-Maker-Mods/DBM-Mods">https://github.com/Discord-Bot-Maker-Mods/DBM-Mods</span><br>
+    <span class="wrexlink3" data-url3="https://github.com/dbm-network/mods">https://github.com/dbm-network/mods</span><br>
   </p>
 
   <h3 style="color: #fff">Current List of Mods</h3>
@@ -281,12 +286,7 @@ span.discord_code_blocks {
     }
   },
 
-  action() {
-    console.log('Music functions successfully overwritten.');
-  },
+  action() {},
 
-  mod(DBM) {
-    const Mods = DBM.Actions.getMods();
-    Mods.setupMusic(DBM);
-  },
+  mod() {},
 };

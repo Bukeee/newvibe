@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Repeat String',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/repeat_string_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.xtimes || '0'}x "${data.girdi || 'None'}"`;
@@ -41,7 +48,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const type = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);

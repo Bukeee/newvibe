@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Send File To Webhook',
   section: 'Webhook Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/send_file_to_webhook_MOD.js',
+  },
 
   subtitle() {
     return 'Send a file to a webhook';
@@ -38,7 +45,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('storage'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);

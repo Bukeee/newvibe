@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Get Song Lyrics',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/get_lyrics_MOD.js',
+  },
 
   subtitle(data) {
     const info = ['Title', 'Artist', 'Lyrics', 'URL'];
@@ -107,7 +114,7 @@ module.exports = {
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const { Actions } = this.getDBM();
     const data = cache.actions[cache.index];
     const info = parseInt(data.info, 10);

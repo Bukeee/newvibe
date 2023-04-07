@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store Embed Info',
   section: 'Embed Message',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_embed_info_MOD.js',
+  },
 
   subtitle(data) {
     return (
@@ -73,7 +80,7 @@ module.exports = {
     glob.messageChange(document.getElementById('message'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const varName = this.evalMessage(data.varName, cache);
     const info = parseInt(data.info, 10);

@@ -1,6 +1,14 @@
 module.exports = {
   name: 'Get Bot Stats From DBL',
+  displayname: 'Get Bot Stats From TopGG',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/get_stats_from_dbl_MOD.js',
+  },
 
   subtitle(data) {
     const info = [
@@ -31,7 +39,7 @@ module.exports = {
 
   variableStorage(data, varType) {
     if (parseInt(data.storage, 10) !== varType) return;
-    let dataType = 'A DBL Stat';
+    let dataType = 'A TopGG Stat';
     switch (parseInt(data.info, 10)) {
       case 0:
         dataType = 'Invite URL';
@@ -111,7 +119,7 @@ module.exports = {
     <input id="botID" class="round" type="text">
   </div><br>
   <div style="float: left; width: 99%; padding-top: 8px;">
-    Your DBL Token:<br>
+    Your TopGG Token:<br>
     <input id="token" class="round" type="text">
   </div><br>
   <div style="float: left; width: 90%; padding-top: 8px;">
@@ -153,7 +161,7 @@ module.exports = {
   <div id="commentSection" style="padding-top: 8px;">
     <p>
       Some options will only work for certified or special bots. You better use some check variables to check if they exist.
-      <b>Note:</b> DBL is going to update the API and you'll need a token after the update!
+      <b>Note:</b> TopGG is going to update the API and you'll need a token after the update!
     </p>
   </div>
 </div>`;
@@ -165,7 +173,7 @@ module.exports = {
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const botID = this.evalMessage(data.botID, cache);
     const info = parseInt(data.info, 10);

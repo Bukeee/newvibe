@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Loop through Folder',
   section: 'Lists and Loops',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/loop_through_folder_MOD.js',
+  },
 
   subtitle() {
     return 'Loops through folder, and turns filenames into array';
@@ -43,7 +50,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const path = this.evalMessage(data.filename, cache);
     const { readdirSync } = require('fs');

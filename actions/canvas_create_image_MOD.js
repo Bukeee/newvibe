@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Canvas Create Image',
   section: 'Image Editing',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/canvas_create_image_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.url}`;
@@ -35,7 +42,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const Canvas = require('canvas');
     Canvas.loadImage(this.evalMessage(data.url, cache)).then((image) => {

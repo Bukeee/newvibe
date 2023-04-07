@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Send GIF',
   section: 'Image Editing',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/send_gif_MOD.js',
+  },
 
   subtitle(data) {
     const channels = [
@@ -58,7 +65,7 @@ module.exports = {
     glob.sendTargetChange(document.getElementById('channel'), 'varNameContainer2');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
@@ -68,21 +75,20 @@ module.exports = {
 
     const channel = parseInt(data.channel, 10);
     const varName2 = this.evalMessage(data.varName2, cache);
-    const target = this.getSendTarget(channel, varName2, cache);
+    const target = await this.getSendTarget(channel, varName2, cache);
+    const content = this.evalMessage(data.message, cache);
+    const options = { files: [image] };
+    if (content) options.content = content;
 
     if (Array.isArray(target)) {
-      this.callListFunc(target, 'send', [this.evalMessage(data.message, cache), { files: [image] }])
-        .then(() => {
-          this.callNextAction(cache);
-        })
-        .catch(this.displayError.bind(this, data, cache));
-    } else if (target && target.send) {
+      this.callListFunc(target, 'send', [options])
+        .then(() => this.callNextAction(cache))
+        .catch((err) => this.displayError(data, cache, err));
+    } else if (target?.send) {
       target
-        .send(this.evalMessage(data.message, cache), { files: [image] })
-        .then(() => {
-          this.callNextAction(cache);
-        })
-        .catch(this.displayError.bind(this, data, cache));
+        .send(options)
+        .then(() => this.callNextAction(cache))
+        .catch((err) => this.displayError(data, cache, err));
     } else {
       this.callNextAction(cache);
     }

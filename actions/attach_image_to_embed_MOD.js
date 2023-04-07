@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Attach Image To Embed',
   section: 'Embed Message',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/attach_image_to_embed_MOD.js',
+  },
 
   subtitle(data) {
     const array = ['Temp Variable', 'Server Variable', 'Global Variable'];
@@ -45,7 +52,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
 
     const embedstorage = parseInt(data.embedstorage, 10);

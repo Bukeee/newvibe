@@ -2,6 +2,13 @@ module.exports = {
   name: 'Edit Item from List MOD',
   displayName: 'Edit Item from List',
   section: 'Lists and Loops',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/edit_item_from_list_MOD.js',
+  },
 
   subtitle(data) {
     return `Edit "${data.value}" at position ${data.position}`;
@@ -40,7 +47,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('storage'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);

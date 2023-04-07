@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store Regex Matched Variable',
   section: 'Variable Things',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_regex_matched_variable_MOD.js',
+  },
 
   subtitle(data) {
     const storage = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -73,7 +80,7 @@ module.exports = {
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
 
     const inputStorage = parseInt(data.inputStorage, 10);

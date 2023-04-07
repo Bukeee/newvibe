@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Create Category Channel',
   section: 'Channel Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/create_category_MOD.js',
+  },
 
   subtitle(data) {
     return `${data.channelName}`;
@@ -40,10 +47,10 @@ Name:<br>
     glob.variableChange(document.getElementById('storage'), 'varNameContainer');
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { server } = cache;
-    if (!server?.channels?.create) return this.callnextAction(cache);
+    if (!server?.channels?.create) return this.callNextAction(cache);
 
     const name = this.evalMessage(data.channelName, cache);
     const position = this.evalMessage(data.position, cache);

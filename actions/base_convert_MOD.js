@@ -2,6 +2,13 @@ module.exports = {
   name: 'Base Convert MOD',
   displayName: 'Base Convert',
   section: 'Other Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/base_convert_MOD.js',
+  },
 
   subtitle(data) {
     return `Base ${data.basef} to Base ${data.baset}`;
@@ -46,7 +53,7 @@ module.exports = {
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const num = this.evalMessage(data.num, cache);
     const basef = parseInt(data.basef, 10);

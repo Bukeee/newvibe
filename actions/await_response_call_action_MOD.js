@@ -4,6 +4,13 @@ module.exports = {
   name: 'Await Response Call Action',
   displayName: 'Await Response',
   section: 'Messaging',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/await_response_call_action_MOD.js',
+  },
   fields: [
     'storage',
     'varName',
@@ -62,26 +69,23 @@ module.exports = {
         </span>
       </div><br>
     </details>
-  </div><br>
+  </div>
+  <br>
+  
   <div style="width: 100vw;">
     <div style="margin-right: 25px">
-      <div style="float: left; width: 35%;">
-        Source Channel:<br>
-        <select id="storage" class="round" onchange="glob.channelChange(this, 'varNameContainer')">${
-          data.channels[isEvent ? 1 : 0]
-        }</select>
-      </div>
-      <div id="varNameContainer" style="display: none; float: right; width: 60%;">
-        Variable Name:<br>
-        <input id="varName" class="round" type="text" list="variableList">
-      </div>
-    </div><br><br><br>
+      <channel-input dropdownLabel="Source Channel" selectId="storage" variableContainerId="varNameContainer" variableInputId="varName"></channel-input>
+    </div>
+    <br><br><br>
+
     <div style="margin: 15px 0;">
       <div style="float: left; width: 100%;">
         JavaScript Filter:
         <input id="filter" class="round" type="text" value="content.length > 0 && author.id === user.id">
       </div>
-    </div><br><br><br><br>
+    </div>
+    <br><br><br><br>
+    
     <div>
       <div>
         <div style="float: left; width: 37%;">
@@ -92,7 +96,9 @@ module.exports = {
           Max Time (milliseconds):<br>
           <input id="time" class="round" type="text" value="60000" placeholder="Optional"><br>
         </div>
-      </div><br><br><br>
+      </div>
+      <br><br><br>
+      
       <div>
         <div style="float: left; width: 35%;">
           On Respond:<br>
@@ -108,7 +114,9 @@ module.exports = {
           <span id="iftrueName">Action Number</span>:<br>
           <input id="iftrueVal" class="round" type="text">
         </div>
-      </div><br><br><br><br>
+      </div>
+      <br><br><br><br>
+      
       <div>
         <div style="float: left; width: 35%;">
           On Timeout:<br>
@@ -124,13 +132,13 @@ module.exports = {
           <span id="iffalseName">Action Number</span>:<br>
           <input id="iffalseVal" class="round" type="text">
         </div>
-      </div><br><br><br><br>
+      </div>
+      <br><br><br><br>
+      
       <div>
         <div style="float: left; width: 35%;">
           Store Message/List To:<br>
-          <select id="storage2" class="round" onchange="glob.variableChange(this, 'varNameContainer2')">${
-            data.variables[0]
-          }</select>
+          <select id="storage2" class="round" onchange="glob.variableChange(this, 'varNameContainer2')">${data.variables[0]}</select>
         </div>
         <div id="varNameContainer2" style="display: block; float: right; width: 58%; margin-right: 25px;">
           Variable Name:<br>
@@ -138,7 +146,9 @@ module.exports = {
         </div>
       </div>
     </div>
-  </div><br><br><br>
+  </div>
+  <br><br><br>
+
 </div>
 <style>
   .codeblock {
@@ -159,7 +169,6 @@ module.exports = {
   init() {
     const { glob, document } = this;
 
-    glob.channelChange(document.getElementById('storage'), 'varNameContainer');
     glob.variableChange(document.getElementById('storage2'), 'varNameContainer2');
     glob.onChangeTrue = function onChangeTrue(event) {
       switch (parseInt(event.value, 10)) {
@@ -209,13 +218,10 @@ module.exports = {
     glob.onChangeFalse(document.getElementById('iffalse'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const { Actions } = this.getDBM();
-
-    const ch = parseInt(data.storage, 10);
-    const varName = this.evalMessage(data.varName, cache);
-    const channel = this.getChannel(ch, varName, cache);
+    const channel = await this.getChannelFromData(data.storage, data.varName, cache);
 
     const storage = parseInt(data.storage2, 10);
     const varName2 = this.evalMessage(data.varName2, cache);
@@ -227,20 +233,13 @@ module.exports = {
       const time = parseInt(this.evalMessage(data.time, cache), 10);
 
       const filter = (msg) => {
-        const { msg: message, server } = cache;
+        const { interaction, msg: message, server } = cache;
         const { author, content } = msg;
-        let user;
-        let member;
+        const user = message?.author ?? interaction?.user;
+        const member = message?.member ?? interaction?.member;
         const tempVars = Actions.getActionVariable.bind(cache.temp);
         const globalVars = Actions.getActionVariable.bind(Actions.global);
-        let serverVars = null;
-
-        if (message) {
-          user = message.author;
-          member = message.member;
-        }
-
-        if (server) serverVars = Actions.getActionVariable.bind(Actions.server[server.id]);
+        const serverVars = server ? Actions.getActionVariable.bind(Actions.server[server.id]) : null;
 
         try {
           return Boolean(eval(js));
@@ -248,6 +247,7 @@ module.exports = {
           return false;
         }
       };
+
       channel
         .awaitMessages({
           filter,
@@ -256,7 +256,7 @@ module.exports = {
           errors: ['time'],
         })
         .then((c) => {
-          this.storeValue(c.size === 1 ? c.first() : c.array(), storage, varName2, cache);
+          this.storeValue(c.size === 1 ? c.first() : [...c.values()], storage, varName2, cache);
           this.executeResults(true, data, cache);
         })
         .catch(() => this.executeResults(false, data, cache));

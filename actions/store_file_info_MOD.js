@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Store File Info',
   section: 'File Stuff',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/store_file_info_MOD.js',
+  },
 
   subtitle(data) {
     return `Store File Info - ${data.info}`;
@@ -9,7 +16,7 @@ module.exports = {
   fields: ['filePath', 'info', 'storage', 'varName'],
 
   variableStorage(data, varType) {
-    if (data.storage !== varType) return;
+    if (parseInt(data.storage, 10) !== varType) return;
     let dataType = 'Unknown type';
     switch (data.info) {
       case 'File Size':
@@ -61,7 +68,7 @@ Variable name:<br>
 
   init() {},
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);
     const { info } = data;

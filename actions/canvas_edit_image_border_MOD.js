@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Canvas Edit Image Border',
   section: 'Image Editing',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/canvas_edit_image_border_MOD.js',
+  },
 
   subtitle(data) {
     const storeTypes = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -44,7 +51,7 @@ module.exports = {
     glob.refreshVariableList(document.getElementById('storage'));
   },
 
-  action(cache) {
+  async action(cache) {
     const Canvas = require('canvas');
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);

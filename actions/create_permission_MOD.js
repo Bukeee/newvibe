@@ -3,6 +3,13 @@
 module.exports = {
   name: 'Create Permissions',
   section: 'Permission Control',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/create_permission_MOD.js',
+  },
 
   subtitle(data) {
     const target = [
@@ -345,7 +352,7 @@ module.exports = {
     glob.typeChange(document.getElementById('type'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const type = parseInt(data.type, 10);
     const { Permissions } = this.getDBM().DiscordJS;

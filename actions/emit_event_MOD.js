@@ -3,6 +3,13 @@ module.exports = {
   name: 'Emit Event',
   section: 'Bot Client Control',
   fields: ['eventType', 'firstArg', 'secondArg'],
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/emit_event_MOD.js',
+  },
 
   subtitle({ eventType }) {
     let DiscordJS;
@@ -107,7 +114,7 @@ module.exports = {
 </style>`;
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
 
     const { DiscordJS } = this.getDBM();

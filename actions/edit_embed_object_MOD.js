@@ -1,6 +1,13 @@
 module.exports = {
   name: 'Edit Embed Object',
   section: 'Embed Message',
+  meta: {
+    version: '2.1.7',
+    preciseCheck: false,
+    author: 'DBM Mods',
+    authorUrl: 'https://github.com/dbm-network/mods',
+    downloadURL: 'https://github.com/dbm-network/mods/blob/master/actions/edit_embed_object_MOD.js',
+  },
 
   subtitle(data) {
     const storage = ['', 'Temp Variable', 'Server Variable', 'Global Variable'];
@@ -530,7 +537,7 @@ module.exports = {
     glob.onChange12(document.getElementById('Edit12'));
   },
 
-  action(cache) {
+  async action(cache) {
     const data = cache.actions[cache.index];
     const storage = parseInt(data.storage, 10);
     const varName = this.evalMessage(data.varName, cache);
